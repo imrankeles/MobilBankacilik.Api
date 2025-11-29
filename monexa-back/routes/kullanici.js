@@ -19,7 +19,7 @@ const kayitSchema = Joi.object({
 });
 
 const loginSchema = Joi.object({
-  email: Joi.string().email().required(),
+  tcno: Joi.string().length(11).required(),
   sifre: Joi.string().required()
 });
 
@@ -52,7 +52,7 @@ router.post("/kayit", async (req, res) => {
     request.input("KayitTarihi", sql.DateTime2, kayitTarihi);
 
     const insertQuery = `
-      INSERT INTO dbo.Kullanicilar 
+      INSERT INTO dbo.Kullanici
         (Ad, SoyAd, Email, Telefon, Sifre, TcNo, Adres, KayitTarihi)
       VALUES 
         (@Ad, @SoyAd, @Email, @Telefon, @Sifre, @TcNo, @Adres, @KayitTarihi)
@@ -79,29 +79,29 @@ router.post("/login", async (req, res) => {
     const { error } = loginSchema.validate(req.body);
     if (error) return res.status(400).json({ message: error.details[0].message });
 
-    const { email, sifre } = req.body;
+    const { tcno, sifre } = req.body;
 
     await sqlConnect(); // MSSQL bağlantısı
     const pool = await sql.connect();
     const request = pool.request();
 
-    request.input("Email", sql.NVarChar(200), email);
+    request.input("TcNo", sql.NVarChar(200), tcno);
 
     const userQuery = `
       SELECT UserId, Ad, SoyAd, Email, Sifre
       FROM dbo.Kullanici
-      WHERE Email = @Email
+      WHERE TcNo = @TcNo
     `;
     const userResult = await request.query(userQuery);
 
     if (userResult.recordset.length === 0) {
-      return res.status(401).json({ message: "Email veya şifre hatalı." });
+      return res.status(401).json({ message: "Giriş bilgileri yanlış." });
     }
 
     const user = userResult.recordset[0];
 
     const isMatch = await bcrypt.compare(sifre, user.Sifre);
-    if (!isMatch) return res.status(401).json({ message: "Email veya şifre hatalı." });
+    if (!isMatch) return res.status(401).json({ message: "Giriş bilgileri yanlış." });
 
     const token = jwt.sign(
       { UserId: user.UserId, Email: user.Email },

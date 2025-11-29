@@ -12,7 +12,7 @@ router.post('/', async (req, res) => {
     const { email, password, cihazBilgisi, ipAdresi } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email ve şifre gerekli." });
+      return res.status(400).json({ message: "Giriş bilgileri yanlış." });
     }
 
     const pool = await getPool();
@@ -28,15 +28,15 @@ router.post('/', async (req, res) => {
 
     const userResult = await request.query(userQuery);
     if (userResult.recordset.length === 0) {
-      return res.status(401).json({ message: "Email veya şifre hatalı." });
+      return res.status(401).json({ message: "" });
     }
 
     const user = userResult.recordset[0];
 
     // Şifreyi doğrula
-    const isMatch = await bcrypt.compare(password, user.PasswordHash);
+    const isMatch = await bcrypt.compare(password, user.Sifre);
     if (!isMatch) {
-      return res.status(401).json({ message: "Email veya şifre hatalı." });
+      return res.status(401).json({ message: "Giriş bilgileri yanlış." });
     }
 
     // 🔐 JWT Token üret

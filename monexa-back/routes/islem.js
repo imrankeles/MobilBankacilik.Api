@@ -41,16 +41,16 @@ router.post('/yap', auth, async (req, res) => {
     }
 
     // 4) bakiye güncelle
-    await trReq.input('newSrcBalance', sql.Decimal(18,2), src.bakiye - tutar)
-      .input('srcId', sql.Int, src.hesap_id)
+    await trReq.input('newSrcBalance', sql.Decimal(18,2), src.Bakiye - tutar)
+      .input('srcId', sql.Int, src.HesapId)
       .query('UPDATE Hesap SET Bakiye = @newSrcBalance WHERE HesapId = @srcId');
 
-    await trReq.input('newDstBalance', sql.Decimal(18,2), dst.bakiye + tutar)
-      .input('dstId', sql.Int, dst.hesap_id)
+    await trReq.input('newDstBalance', sql.Decimal(18,2), dst.Bakiye + tutar)
+      .input('dstId', sql.Int, dst.HesapId)
       .query('UPDATE Hesap SET Bakiye = @newDstBalance WHERE HesapId = @dstId');
 
     // 5) işlem kayıtları ekle (kaynak)
-    await trReq.input('hesapId', sql.Int, src.hesap_id)
+    await trReq.input('hesapId', sql.Int, src.HesapId)
       .input('islem_turu', sql.NVarChar(50), 'Havale/Transfer - Gönderim')
       .input('tutar', sql.Decimal(18,2), tutar)
       .input('aciklama', sql.NVarChar(255), aciklama || null)
@@ -61,7 +61,7 @@ router.post('/yap', auth, async (req, res) => {
       `);
 
     // hedef için işlem kaydı
-    await trReq.input('hesapId2', sql.Int, dst.hesap_id)
+    await trReq.input('hesapId2', sql.Int, dst.HesapId)
       .input('islem_turu2', sql.NVarChar(50), 'Havale/Transfer - Alım')
       .input('tutar2', sql.Decimal(18,2), tutar)
       .input('aciklama2', sql.NVarChar(255), `Alındı: ${aciklama || ''}`)
