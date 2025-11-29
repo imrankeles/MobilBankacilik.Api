@@ -10,7 +10,7 @@ import kullaniciRoute from "./monexa-back/routes/kullanici.js";
 import hesapRoute from "./monexa-back/routes/hesap.js";
 import faturaRoute from "./monexa-back/routes/fatura.js";
 import kartRoute from "./monexa-back/routes/kart.js";
-import logRoute from "./monexa-back/routes/LogİnLog.js";
+import logRoute from "./monexa-back/routes/loginlog.js";
 import lookupRoute from "./monexa-back/routes/lookup.js";
 import islemRoute from "./monexa-back/routes/islem.js";
 
