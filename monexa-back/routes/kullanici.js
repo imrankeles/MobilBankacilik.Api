@@ -31,7 +31,8 @@ router.post("/kayit", async (req, res) => {
     const { error } = kayitSchema.validate(req.body);
     if (error) return res.status(400).json({ message: error.details[0].message });
 
-    const { ad, soyad, email, telefon, sifre, tcno, adres } = req.body;
+    let { ad, soyad, email, telefon, sifre, tcno, adres } = req.body;
+    telefon = telefon.replace(/\D/g, "");
 
     await sqlConnect(); // MSSQL bağlantısı
 

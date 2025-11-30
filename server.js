@@ -27,13 +27,13 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 // Rate limiting
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Upper limit for request
-    message: "Çok fazla istek gönderildi, lütfen daha sonra deneyin.",
-  })
-);
+// app.use(
+//   rateLimit({
+//     windowMs: 15 * 60 * 1000, // 15 minutes
+//     max: 100, // Upper limit for request
+//     message: "Çok fazla istek gönderildi, lütfen daha sonra deneyin.",
+//   })
+// );
 
 app.use("/api/kullanici", kullaniciRoute);
 app.use("/api/hesap", hesapRoute);

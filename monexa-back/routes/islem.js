@@ -43,11 +43,10 @@ router.post('/yap', auth, async (req, res) => {
     // 4) bakiye güncelle
     await trReq.input('newSrcBalance', sql.Decimal(18,2), src.Bakiye - tutar)
       .input('srcId', sql.Int, src.HesapId)
-      .query('UPDATE Hesap SET Bakiye = @newSrcBalance, IsExpense = 1 WHERE HesapId = @srcId');
-
+      .query('UPDATE Hesap SET Bakiye = @newSrcBalance WHERE HesapId = @srcId');
     await trReq.input('newDstBalance', sql.Decimal(18,2), dst.Bakiye + tutar)
       .input('dstId', sql.Int, dst.HesapId)
-      .query('UPDATE Hesap SET Bakiye = @newDstBalancei IsSpending = 1 WHERE HesapId = @dstId');
+      .query('UPDATE Hesap SET Bakiye = @newDstBalance WHERE HesapId = @dstId');
 
     // 5) işlem kayıtları ekle (kaynak)
     await trReq.input('hesapId', sql.Int, src.HesapId)

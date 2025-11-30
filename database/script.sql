@@ -124,7 +124,7 @@ BEGIN
         [Aciklama] NVARCHAR(255) NULL,
         [HedefHesap] NVARCHAR(20) NULL,
         [IsExpense] BIT NOT NULL,
-        [IsSpending] BIT NOT NULl,
+        [IsSpending] BIT NOT NULL,
         CONSTRAINT [FK_Islem_Hesap] FOREIGN KEY ([HesapId]) REFERENCES [Hesap]([HesapId])
     );
 END

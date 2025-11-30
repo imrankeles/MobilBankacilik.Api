@@ -7,6 +7,7 @@ const config = {
   password: process.env.DB_PASSWORD || "12345",
   database: process.env.DB_NAME || "MobilBankacilik",
   server: process.env.DB_SERVER || "localhost",
+  port: process.env.DB_PORT ? parseInt(process.env.DB_PORT): 1433,
   options: {
     encrypt: false, // true istersen güvenli bağlantı
     trustServerCertificate: true,
