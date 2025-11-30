@@ -43,11 +43,11 @@ router.post('/yap', auth, async (req, res) => {
     // 4) bakiye güncelle
     await trReq.input('newSrcBalance', sql.Decimal(18,2), src.Bakiye - tutar)
       .input('srcId', sql.Int, src.HesapId)
-      .query('UPDATE Hesap SET Bakiye = @newSrcBalance WHERE HesapId = @srcId');
+      .query('UPDATE Hesap SET Bakiye = @newSrcBalance, IsExpense = 1 WHERE HesapId = @srcId');
 
     await trReq.input('newDstBalance', sql.Decimal(18,2), dst.Bakiye + tutar)
       .input('dstId', sql.Int, dst.HesapId)
-      .query('UPDATE Hesap SET Bakiye = @newDstBalance WHERE HesapId = @dstId');
+      .query('UPDATE Hesap SET Bakiye = @newDstBalancei IsSpending = 1 WHERE HesapId = @dstId');
 
     // 5) işlem kayıtları ekle (kaynak)
     await trReq.input('hesapId', sql.Int, src.HesapId)
@@ -56,8 +56,8 @@ router.post('/yap', auth, async (req, res) => {
       .input('aciklama', sql.NVarChar(255), aciklama || null)
       .input('hedef_hesap', sql.NVarChar(20), to_iban_no)
       .query(`
-        INSERT INTO Islem (HesapId, IslemTuru, Tutar, Aciklama, HedefHesap)
-        VALUES (@hesapId, @islem_turu, @tutar, @aciklama, @hedef_hesap)
+        INSERT INTO Islem (HesapId, IslemTuru, Tutar, Aciklama, HedefHesap, IsExpense)
+        VALUES (@hesapId, @islem_turu, @tutar, @aciklama, @hedef_hesap, 1)
       `);
 
     // hedef için işlem kaydı
@@ -67,8 +67,8 @@ router.post('/yap', auth, async (req, res) => {
       .input('aciklama2', sql.NVarChar(255), `Alındı: ${aciklama || ''}`)
       .input('hedef_hesap2', sql.NVarChar(20), src.iban_no)
       .query(`
-        INSERT INTO Islem (HesapId, IslemTuru, Tutar, Aciklama, HedefHesap)
-        VALUES (@hesapId2, @islem_turu2, @tutar2, @aciklama2, @hedef_hesap2)
+        INSERT INTO Islem (HesapId, IslemTuru, Tutar, Aciklama, HedefHesap, IsSpending)
+        VALUES (@hesapId2, @islem_turu2, @tutar2, @aciklama2, @hedef_hesap2, 1)
       `);
 
     await transaction.commit();
