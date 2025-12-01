@@ -62,7 +62,7 @@ BEGIN
     CREATE TABLE [Hesap] (
         [HesapId] INT IDENTITY(1,1) PRIMARY KEY,
         [UserId] INT NOT NULL,
-        [IbanNo] NVARCHAR(20) UNIQUE NOT NULL,
+        [IbanNo] NVARCHAR(26) UNIQUE NOT NULL,
         [HesapTuru] NVARCHAR(50) NOT NULL,
         [Bakiye] DECIMAL(18,2) DEFAULT 0,
         [AcilisTarihi] DATETIME DEFAULT GETDATE(),
@@ -122,7 +122,7 @@ BEGIN
         [Tutar] DECIMAL(18,2) NOT NULL,
         [Tarih] DATETIME DEFAULT GETDATE(),
         [Aciklama] NVARCHAR(255) NULL,
-        [HedefHesap] NVARCHAR(20) NULL,
+        [HedefHesap] NVARCHAR(26) NULL,
         [IsExpense] BIT NOT NULL,
         [IsSpending] BIT NOT NULL,
         CONSTRAINT [FK_Islem_Hesap] FOREIGN KEY ([HesapId]) REFERENCES [Hesap]([HesapId])

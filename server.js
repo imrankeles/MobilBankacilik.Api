@@ -35,15 +35,13 @@ app.use(express.json());
 //   })
 // );
 
-app.use("/api/kullanici", kullaniciRoute);
 app.use("/api/hesap", hesapRoute);
+app.use("/api/kullanici", kullaniciRoute);
 app.use("/api/fatura", faturaRoute);
 app.use("/api/islem", islemRoute);
 app.use("/api/kart", kartRoute);
 app.use("/api/login-log", logRoute);
 app.use("/api", lookupRoute);
-
-app.use(errorHandler);
 
 sqlConnect();
 

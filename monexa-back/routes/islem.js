@@ -5,7 +5,7 @@ import { auth } from '../middlewares/auth.js';
 
 // make a transfer / transaction
 router.post('/yap', auth, async (req, res) => {
-  const { from_hesap_id, to_iban_no, tutar, aciklama } = req.body;
+  const { from_hesap_id, to_iban_no, tutar, aciklama, ad_soyad } = req.body;
   if (!from_hesap_id || !to_iban_no || !tutar) return res.status(400).json({ message: 'Eksik alan' });
 
   const pool = await getPool();
@@ -25,7 +25,7 @@ router.post('/yap', auth, async (req, res) => {
     const src = srcRes.recordset[0];
 
     // 2) hedef hesabı iban ile getir
-    const dstRes = await trReq.input('toIban', sql.NVarChar(20), to_iban_no)
+    const dstRes = await trReq.input('toIban', sql.NVarChar(26), to_iban_no)
       .query('SELECT HesapId, Bakiye FROM Hesap WHERE IbanNo = @toIban');
 
     if (!dstRes.recordset.length) {
@@ -53,7 +53,7 @@ router.post('/yap', auth, async (req, res) => {
       .input('islem_turu', sql.NVarChar(50), 'Havale/Transfer - Gönderim')
       .input('tutar', sql.Decimal(18,2), tutar)
       .input('aciklama', sql.NVarChar(255), aciklama || null)
-      .input('hedef_hesap', sql.NVarChar(20), to_iban_no)
+      .input('hedef_hesap', sql.NVarChar(26), to_iban_no)
       .query(`
         INSERT INTO Islem (HesapId, IslemTuru, Tutar, Aciklama, HedefHesap, IsExpense)
         VALUES (@hesapId, @islem_turu, @tutar, @aciklama, @hedef_hesap, 1)
@@ -64,7 +64,7 @@ router.post('/yap', auth, async (req, res) => {
       .input('islem_turu2', sql.NVarChar(50), 'Havale/Transfer - Alım')
       .input('tutar2', sql.Decimal(18,2), tutar)
       .input('aciklama2', sql.NVarChar(255), `Alındı: ${aciklama || ''}`)
-      .input('hedef_hesap2', sql.NVarChar(20), src.iban_no)
+      .input('hedef_hesap2', sql.NVarChar(26), src.iban_no)
       .query(`
         INSERT INTO Islem (HesapId, IslemTuru, Tutar, Aciklama, HedefHesap, IsSpending)
         VALUES (@hesapId2, @islem_turu2, @tutar2, @aciklama2, @hedef_hesap2, 1)

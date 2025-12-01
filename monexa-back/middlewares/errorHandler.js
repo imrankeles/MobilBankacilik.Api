@@ -4,4 +4,5 @@ export default function errorHandler(err, req, res, next) {
     success: false,
     message: err.message || "Sunucu hatası oluştu.",
   });
+  next()
 }
